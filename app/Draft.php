@@ -7,6 +7,7 @@
   class Draft extends Model {
 
     protected $fillable = [
+      'leagueId',
       'status',
       'teams',
       'type',

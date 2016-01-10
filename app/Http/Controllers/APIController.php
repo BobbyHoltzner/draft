@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use GuzzleHttp\Client;
+use App\Player;
 
 class APIController extends Controller
 {
@@ -15,6 +16,13 @@ class APIController extends Controller
 
     }
 
+    public function decodeMFL($res){
+      $players = $res->getBody();
+      $players = json_decode($players);
+      $players = $players->players->player;
+      return $players;
+    }
+
 
 
     public function updatePlayers(){
@@ -22,9 +30,21 @@ class APIController extends Controller
       $leagueId = getenv('LEAGUE_ID');
 
       $client = new Client();
-      $res = $client->request('GET', 'http://football.myfantasyleague.com/2015/export?TYPE=freeAgents&L='.$leagueId.'&W=&JSON=1');
+      $res = $client->request('GET', 'http://football.myfantasyleague.com/2015/export?TYPE=players&L='.$leagueId.'&W=&JSON=1');
 
-      return $res->getBody();
+      $players = $this->decodeMFL($res);
+
+      foreach ($players as $player){
+        Player::create([
+          'name' => $player->name,
+          'team' => $player->team,
+          'position' => $player->position,
+          'mflId' => $player->id,
+        ]);
+      }
+
+      return 'Done!';
+
     }
 
     //

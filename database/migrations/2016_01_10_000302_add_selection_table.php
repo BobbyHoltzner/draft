@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserTable extends Migration
+class AddSelectionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,11 @@ class CreateUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('Users', function (Blueprint $table) {
+        Schema::create('selections', function(Blueprint $table){
           $table->increments('id')->unsigned()->unique();
-          $table->string('name');
-          $table->string('email')->unique();
-          $table->string('password');
+          $table->integer('userId')->unsigned();
+          $table->integer('playerId')->unsigned();
+          $table->integer('draftId')->unsigned();
           $table->timestamps();
         });
     }
@@ -28,8 +28,6 @@ class CreateUserTable extends Migration
      */
     public function down()
     {
-      Schema::table('users', function ($table) {
-        $table->dropColumn(['id', 'name', 'email', 'password']);
-      });
+        //
     }
 }
